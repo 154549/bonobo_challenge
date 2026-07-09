@@ -41,11 +41,16 @@ cp .env.example .env
 # 3. Crea il database locale e applica le migration
 npx prisma migrate dev
 
-# 4. Avvia il server in sviluppo
+# 4. Genera il client Prisma — OBBLIGATORIO, vedi nota sotto
+npx prisma generate
+
+# 5. Avvia il server in sviluppo
 npm run dev
 ```
 
-Il server si avvia su `http://localhost:3000`. Il passo 3 crea da zero il file `prisma/dev.db` (escluso dal repository) e la tabella `Note`, secondo il modello in `prisma/schema.prisma`; il database risulta vuoto, senza dati di esempio.
+Il server si avvia su `http://localhost:3000`. Il passo 3 crea da zero il file `prisma/dev.db` (escluso dal repository, così come `generated/prisma/`) e la tabella `Note`, secondo il modello in `prisma/schema.prisma`; il database risulta vuoto, senza dati di esempio.
+
+**Nota importante**: a differenza del comportamento "classico" di Prisma, in questo progetto `prisma migrate dev` **non genera automaticamente il client** (verificato: succede sia quando crea il database da zero, sia quando stampa "Already in sync, no schema change or pending migration was found"), a causa del generator `prisma-client` con output personalizzato (`generated/prisma/`, vedi `prisma/schema.prisma`). Il passo 4 (`npx prisma generate`) **va sempre eseguito esplicitamente** dopo la migration, altrimenti `npm run dev` fallisce con `Cannot find module '../../generated/prisma/client'`.
 
 ## Test
 
