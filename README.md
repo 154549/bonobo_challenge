@@ -16,6 +16,8 @@ Ho preferito mantenere lo stack consigliato in quanto utente novizio, quindi:
 - Zod
 - Vitest
 
+`package-lock.json` è lo snapshot esatto di cosa è stato davvero installato — versione precisa di ogni pacchetto e di tutte le sue dipendenze indirette — generato automaticamente da npm, mai modificato a mano. Va sempre committato insieme al codice: garantisce che chiunque cloni il repo e lanci `npm install` ottenga esattamente le stesse versioni. Particolarmente utile qui, dato che il progetto usa Prisma 7 e TypeScript 7, versioni molto recenti con breaking change gestiti durante lo sviluppo (vedi `ai-log/`).
+
 
 #### Che rischi e limiti presenta l'applicazione?
 - Nessuna autenticazione: chiunque raggiunga il servizio in rete può leggere, modificare o cancellare qualunque nota. Accettabile solo finché il servizio resta locale/non esposto.
