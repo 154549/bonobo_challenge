@@ -226,3 +226,7 @@ Ho fissato un set chiuso di 4 tipi di nota (`issue`, `task`, `info`, `other`) in
 `priority` e `status` hanno valori di default (`medium`, `open`) così una nota si può creare rapidamente anche senza specificarli subito. Ad esempio per semplici note di info da mantenere salvate.
 
 Nessuna autenticazione, nessun concetto di utente/team: il servizio resta ad uso **locale** (non esposto pubblicamente), per rispettare semplicità e lo scopo finale del progetto.
+
+#### Nota su `npm audit`
+
+`npm audit` segnala 3 vulnerabilità moderate, tutte riconducibili a `@hono/node-server` (bypass di un middleware in `serveStatic` via slash ripetuti, [GHSA-92pp-h63x-v22m](https://github.com/advisories/GHSA-92pp-h63x-v22m)), dipendenza transitiva di `@prisma/dev` — il componente che alimenta il comando opzionale `prisma dev`, non usato in questo progetto (qui la persistenza passa da `prisma migrate` + `@prisma/adapter-better-sqlite3`, un percorso che non coinvolge `@hono/node-server` a runtime). Il pacchetto è presente nell'albero delle dipendenze ma il suo codice non viene mai eseguito. Non ho applicato `npm audit fix --force` perché forzerebbe un downgrade di Prisma a `6.19.3`, un breaking change non necessario per un rischio che qui è trascurabile.
