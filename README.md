@@ -16,7 +16,7 @@ Ho preferito mantenere lo stack consigliato in quanto utente novizio, quindi:
 - Zod
 - Vitest
 
-`package-lock.json` è lo snapshot esatto di cosa è stato davvero installato — versione precisa di ogni pacchetto e di tutte le sue dipendenze indirette — generato automaticamente da npm, mai modificato a mano. Va sempre committato insieme al codice: garantisce che chiunque cloni il repo e lanci `npm install` ottenga esattamente le stesse versioni. Particolarmente utile qui, dato che il progetto usa Prisma 7 e TypeScript 7, versioni molto recenti con breaking change gestiti durante lo sviluppo (vedi `ai-log/`).
+`package-lock.json` rimane  committato insieme al codice: garantisce che chiunque cloni il repo e lanci `npm install` ottenga esattamente le stesse versioni. Particolarmente utile qui, dato che il progetto usa Prisma 7 e TypeScript 7, versioni molto recenti con breaking change gestiti durante lo sviluppo (vedi `ai-log/`).
 
 
 #### Che rischi e limiti presenta l'applicazione?
@@ -236,4 +236,4 @@ Nessuna autenticazione, nessun concetto di utente/team: il servizio resta ad uso
 
 #### Nota su `npm audit`
 
-`npm audit` segnala 3 vulnerabilità moderate, tutte riconducibili a `@hono/node-server` (bypass di un middleware in `serveStatic` via slash ripetuti, [GHSA-92pp-h63x-v22m](https://github.com/advisories/GHSA-92pp-h63x-v22m)), dipendenza transitiva di `@prisma/dev` — il componente che alimenta il comando opzionale `prisma dev`, non usato in questo progetto (qui la persistenza passa da `prisma migrate` + `@prisma/adapter-better-sqlite3`, un percorso che non coinvolge `@hono/node-server` a runtime). Il pacchetto è presente nell'albero delle dipendenze ma il suo codice non viene mai eseguito. Non ho applicato `npm audit fix --force` perché forzerebbe un downgrade di Prisma a `6.19.3`, un breaking change non necessario per un rischio che qui è trascurabile.
+`npm audit` segnala 3 vulnerabilità moderate, tutte riconducibili a `@hono/node-server` (bypass di un middleware in `serveStatic` via slash ripetuti, [GHSA-92pp-h63x-v22m](https://github.com/advisories/GHSA-92pp-h63x-v22m)), dipendenza transitiva di `@prisma/dev` il componente che alimenta il comando opzionale `prisma dev`, non usato in questo progetto (qui la persistenza passa da `prisma migrate` + `@prisma/adapter-better-sqlite3`, un percorso che non coinvolge `@hono/node-server` a runtime). Il pacchetto è presente nell'albero delle dipendenze ma il suo codice non viene mai eseguito. Non ho applicato `npm audit fix --force` perché forzerebbe un downgrade di Prisma a `6.19.3`, un breaking change non necessario per un rischio che qui è trascurabile.
