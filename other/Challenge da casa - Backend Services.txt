@@ -1,0 +1,324 @@
+Vai al contenuto
+
+<#main>
+📐
+Challenge da casa - Backend Services
+
+Ottieni Notion gratis
+
+📐 Icona della pagina📐 Icona della pagina
+
+
+  Challenge da casa - Backend Services
+
+
+      Contesto
+
+Bonobo Studio lavora su progetti digitali e AI per clienti diversi. Una parte importante del lavoro non e' solo scrivere codice, ma capire richieste spesso incomplete, trasformarle in una soluzione chiara, usare bene gli strumenti disponibili e comunicare in modo ordinato quello che e' stato fatto.
+Questa challenge serve a valutare come ragioni, come impari, come usi l'AI durante lo sviluppo e quanto rispetti una richiesta tecnica.
+Non ci interessa vedere quanto conosci gia' uno stack specifico. Ci interessa capire come ti muovi davanti a uno stack assegnato, un dominio semplice e un problema realistico.
+
+
+      Obiettivo
+
+Realizza un piccolo servizio backend per gestire note operative collegate a clienti, attivita' e richieste.
+Il servizio deve permettere a un team interno di:
+salvare note su clienti o attivita';
+recuperarle velocemente;
+modificarle quando cambiano;
+eliminarle quando non servono piu';
+cercarle e filtrarle in modo utile.
+Il dominio e' volutamente semplice. La qualita' della consegna verra' valutata soprattutto su comprensione, metodo, organizzazione, uso consapevole dell'AI e chiarezza della documentazione.
+
+
+      Stack Obbligatorio
+
+Per questa challenge devi usare:
+Node.js
+TypeScript
+Fastify
+SQLite
+Prisma ORM
+Vitest per i test
+Non proporre uno stack alternativo.
+Se non conosci uno o piu' strumenti, va bene. Fa parte della prova. Puoi usare documentazione, ricerca online e strumenti AI per imparare rapidamente quello che ti serve.
+
+
+      Scenario
+
+Immagina che Bonobo Studio abbia bisogno di un servizio interno per raccogliere note operative.
+Una nota puo' rappresentare, per esempio:
+una richiesta emersa durante una call cliente;
+un problema da verificare;
+una decisione presa durante un'analisi;
+un'attivita' da fare;
+un follow-up commerciale o operativo;
+un'informazione tecnica utile per il team.
+Il servizio deve essere pensato come base backend di un prodotto interno. Non serve realizzare un frontend.
+
+
+      Requisiti Funzionali
+
+Devi progettare e implementare le funzionalita' principali per gestire le note.
+Sono richiesti almeno:
+creazione di una nota;
+lettura di una lista di note;
+lettura del dettaglio di una singola nota;
+modifica di una nota;
+eliminazione di una nota;
+ricerca testuale;
+filtri utili per organizzare le note;
+persistenza su SQLite.
+Non ti diamo volutamente una lista completa di campi o endpoint.
+Devi decidere tu:
+quali informazioni minime servono per una nota;
+come strutturare il modello dati;
+quali endpoint esporre;
+quali filtri hanno senso;
+quali validazioni sono necessarie;
+quali errori gestire e come restituirli.
+Nel README devi spiegare le scelte fatte.
+
+
+      Indicazioni sul Modello Dati
+
+Il modello deve essere semplice ma realistico.
+Una nota dovrebbe permettere almeno di capire:
+di cosa parla;
+a quale cliente o contesto e' collegata;
+che tipo di nota e';
+quanto e' importante;
+in che stato si trova;
+quando e' stata creata o aggiornata.
+Puoi aggiungere altri campi se li ritieni utili, ma evita complessita' non necessaria.
+
+
+      Indicazioni sulle API
+
+Le API devono essere coerenti, facili da provare e documentate nel README.
+Non serve una documentazione OpenAPI completa, ma deve essere chiaro:
+quali endpoint esistono;
+che payload si aspettano;
+quali query parameter sono supportati;
+che tipo di risposta restituiscono;
+come vengono gestiti gli errori.
+Puoi usare esempi curl
+, file .http
+, Postman collection o altro formato semplice.
+
+
+      Persistenza
+
+Usa SQLite tramite Prisma ORM.
+Il progetto deve includere tutto il necessario per:
+creare il database locale;
+applicare le migration;
+avviare il servizio;
+eseguire i test.
+La persona che valuta il progetto deve poterlo avviare seguendo il README, senza dover indovinare passaggi mancanti.
+
+
+      Testing
+
+Scrivi test essenziali con Vitest.
+Non serve coprire tutto, ma devono esserci test utili sui comportamenti principali.
+Sono particolarmente interessanti:
+creazione di una nota valida;
+gestione di input non validi;
+modifica;
+eliminazione;
+ricerca o filtri;
+casi in cui una nota non esiste.
+
+
+      Uso dell'AI
+
+Puoi e devi usare strumenti AI durante la challenge.
+Bonobo Studio non fornisce un account AI pagato per questa prova. Usa uno strumento che conosci, che puoi attivare gratuitamente, e che ti permetta di lavorare sul progetto in modo pratico.
+
+
+        Strumento Consigliato
+
+Per questa challenge consigliamo di usare Gemini CLI.
+E' uno strumento da terminale che permette di lavorare direttamente dentro la cartella del progetto. Questo rende piu' semplice valutare come usi l'AI nel flusso reale di sviluppo, non solo come chat esterna.
+Puoi usarlo con un account Google personale e, al momento della preparazione di questa challenge, e' disponibile un piano gratuito sufficiente per un progetto di queste dimensioni.
+Documentazione:
+https://github.com/google-gemini/gemini-cli <https://github.com/google-gemini/gemini-cli>
+https://www.geminicli.com/ <https://www.geminicli.com/>
+Installazione rapida:
+npx @google/gemini-cli
+​
+Oppure:
+npm install -g @google/gemini-cli
+gemini
+​
+Uso suggerito:
+cd backend-notes-service
+gemini
+​
+Da li' puoi chiedere supporto per:
+capire lo stack assegnato;
+progettare il modello dati;
+impostare Fastify, Prisma e SQLite;
+scrivere o revisionare endpoint;
+generare test;
+controllare errori;
+migliorare README e documentazione.
+
+
+        Alternative Accettabili
+
+Puoi usare un altro strumento AI se lo hai gia' disponibile o se riesci ad attivarlo gratuitamente.
+Esempi:
+Cursor, piano gratuito o personale;
+GitHub Copilot, se lo hai gia' disponibile;
+Continue.dev su VS Code con modello locale o API gratuita;
+Aider da terminale con provider gratuito o modello locale;
+altro strumento equivalente.
+La condizione e' che lo strumento scelto permetta di ricostruire chiaramente il lavoro fatto con l'AI.
+Evita di usare solo una chat generica scollegata dal progetto. L'obiettivo e' vedere come usi l'AI dentro un flusso di sviluppo reale.
+
+
+        Log Obbligatorio dell'Uso AI
+
+Nel repository devi includere una cartella:
+ai-log/
+​
+Dentro questa cartella inserisci:
+export della chat, se il tool lo permette;
+oppure trascrizione ordinata dei prompt principali;
+eventuali risposte AI importanti, se utili a capire il processo;
+note su cosa hai accettato, modificato o scartato.
+Se il tool non permette export automatico, crea un file manuale:
+ai-log/prompts.md
+​
+Il file deve contenere almeno:
+# AI Log
+
+## Tool utilizzato
+
+## Prompt principali
+
+### Prompt 1
+Testo del prompt.
+
+### Prompt 2
+Testo del prompt.
+
+## Risposte o output rilevanti
+
+## Decisioni prese da me
+
+## Codice generato dall'AI che ho modificato
+
+## Errori o limiti dell'AI che ho corretto
+​
+Non devi incollare ogni singolo messaggio se la chat e' molto lunga. Devi pero' rendere chiaro come hai ragionato e come hai guidato lo strumento.
+
+
+      Analisi Iniziale Obbligatoria
+
+Nel README includi una sezione chiamata:
+## Analisi della richiesta
+​
+In questa sezione spiega:
+cosa hai capito del problema;
+quali assunzioni hai fatto;
+quali funzionalita' hai incluso;
+quali funzionalita' hai escluso;
+quali domande faresti al cliente prima di portare il servizio in produzione;
+quali rischi o limiti ha la soluzione consegnata.
+Questa parte e' importante quanto il codice.
+
+
+      README Richiesto
+
+Il README deve essere scritto come se dovesse essere letto da una persona del team che non ha seguito lo sviluppo.
+Deve contenere almeno:
+Markdown
+
+# Backend Notes Service
+## Descrizione
+## Analisi della richiesta
+## Stack utilizzato
+## Installazione
+## Configurazione ambiente
+## Database e migration
+## Avvio del progetto
+## Test
+## API disponibili
+## Esempi di richieste
+## Scelte implementative
+## Uso dell'AI
+## Limiti noti
+## Miglioramenti futuri
+​
+
+
+      Consegna
+
+Consegna un repository GitHub con:
+codice sorgente;
+README completo;
+migration Prisma;
+database SQLite escluso dal repository, se generato localmente;
+file .env.example
+;
+test;
+log o export dell'uso AI nella cartella ai-log/
+;
+istruzioni chiare per avvio e verifica.
+Il progetto deve partire con una sequenza di comandi semplice e documentata.
+
+
+      Tempo
+
+Hai 3 giorni.
+Non e' necessario implementare ogni possibile funzionalita'. Concentrati prima su:
+comprensione della richiesta;
+modello dati sensato;
+API funzionanti;
+SQLite + Prisma configurati bene;
+validazioni;
+test essenziali;
+README chiaro;
+uso AI documentato.
+
+
+      Cosa Valutiamo
+
+Valuteremo:
+capacita' di interpretare una richiesta non completamente specificata;
+capacita' di imparare strumenti assegnati;
+qualita' dell'architettura backend;
+chiarezza delle API;
+gestione degli errori;
+qualita' dei test;
+ordine del repository;
+chiarezza del README;
+uso consapevole dell'AI;
+capacita' di spiegare limiti, assunzioni e decisioni.
+
+
+      Bonus Opzionali
+
+I bonus sono facoltativi.
+Implementali solo se il core e' gia' solido.
+Interfaccia frontend base con React e Shadcn come design system
+paginazione;
+ordinamento;
+seed iniziale;
+endpoint di statistiche;
+soft delete;
+audit log;
+Dockerfile;
+documentazione OpenAPI;
+autenticazione semplice.
+
+
+      Note Finali
+
+Non cercare di impressionarci con complessita' inutile.
+Una soluzione semplice, chiara, testata e ben spiegata vale piu' di una soluzione ampia ma fragile.
+La cosa piu' importante e' vedere come lavori: come capisci il problema, come usi gli strumenti, come verifichi il risultato e come rendi il progetto comprensibile per chi lo riceve.
+

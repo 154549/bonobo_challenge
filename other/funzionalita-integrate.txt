@@ -1,0 +1,124 @@
+FUNZIONALITA' INTEGRATE - Backend Notes Service
+Stato aggiornato al: 2026-07-08
+
+Nota: il progetto E' ORA ESEGUIBILE END-TO-END (verificato con avvio reale
+del server e chiamate curl a tutti gli endpoint, oltre alla suite di test).
+
+=== SETUP PROGETTO ===
+
+- package.json creato, con script: dev, build, start, test, test:watch,
+  prisma:migrate, prisma:generate, prisma:studio
+- tsconfig.json creato (target ES2022, module/moduleResolution nodenext -
+  TypeScript 7 ha rimosso moduleResolution "node")
+- Dipendenze installate con npm install:
+  runtime: fastify, zod, @prisma/client, dotenv, @prisma/adapter-better-sqlite3,
+  better-sqlite3
+  dev: typescript, prisma, tsx, vitest, @types/node, @types/better-sqlite3
+- npm audit segnala 3 vulnerabilita' moderate in una dipendenza transitiva
+  di "prisma dev" (server di sviluppo locale, non usato in questo progetto:
+  qui si usa SQLite + prisma migrate) -> rischio reale trascurabile
+- prisma.config.ts creato: in Prisma ORM 7 l'URL del datasource non si legge
+  piu' da schema.prisma ma da qui (letto dal CLI per migrate/generate) e da
+  un driver adapter per il client a runtime
+
+=== MODELLO DATABASE (prisma/schema.prisma) ===
+
+- generator client: provider "prisma-client" (nuovo generator TS di Prisma 7),
+  output in generated/prisma (cartella generata, in .gitignore)
+- datasource: sqlite (url gestito da prisma.config.ts, non piu' nello schema)
+- model Note: id (autoincrement), title, content (opzionale), type, priority
+  (default "medium"), status (default "open"), createdAt (default now()),
+  updatedAt (auto-aggiornato)
+- type/priority/status sono String (SQLite non supporta enum nativi Prisma),
+  validati lato applicazione in src/schemas/notes.schema.ts
+- indici su type, priority, status, createdAt per velocizzare i filtri
+- migration eseguita: prisma/migrations/20260708175034_init
+- src/lib/prisma.ts usa il driver adapter @prisma/adapter-better-sqlite3
+  (PrismaBetterSqlite3), richiesto da Prisma 7 per il client a runtime
+
+=== ENDPOINT IMPLEMENTATI (src/routes/notes.ts) ===
+
+POST   /notes       -> creazione di una nota
+GET    /notes        -> lista di note, con filtri e ricerca testuale (vedi sotto)
+GET    /notes/:id    -> dettaglio di una singola nota
+PUT    /notes/:id    -> modifica di una nota
+DELETE /notes/:id    -> eliminazione di una nota
+
+=== FILTRI E RICERCA SU GET /notes ===
+
+- type         filtro esatto (issue | task | info | other)
+- priority     filtro esatto (low | medium | high)
+- status       filtro esatto (open | in_progress | done)
+- createdFrom  data minima di creazione (range)
+- createdTo    data massima di creazione (range)
+- q            ricerca testuale (contains, case-insensitive su ASCII) su title e content
+
+Tutti i filtri sono combinabili tra loro nella stessa richiesta.
+
+Formato risposta di GET /notes: { notes: [...] }. Se il database e' del
+tutto vuoto (0 note, indipendentemente dai filtri) la risposta include anche
+{ message: "..." } come messaggio di servizio; se sono i filtri a non
+trovare nulla ma il database ha altre note, "notes" e' semplicemente un
+array vuoto senza message (per non confondere "vuoto per i filtri" con
+"database vuoto"). Implementato in src/routes/notes.ts con
+notesService.countNotes() (src/services/notes.service.ts).
+
+=== MODELLO NOTA (campi previsti, definiti negli schemi Zod) ===
+
+- title      obbligatorio
+- content    opzionale
+- type       obbligatorio (issue | task | info | other)
+- priority   opzionale, default "medium"
+- status     opzionale, default "open"
+- createdAt  automatico (data di inserimento, gestita da Prisma)
+- updatedAt  automatico (data di ultimo aggiornamento, gestita da Prisma)
+
+NOTA: il campo "client" (cliente/contesto collegato) e' stato rimosso su
+richiesta esplicita perche' ritenuto ridondante con title/content. Questo
+si discosta dalla sezione "Indicazioni sul Modello Dati" della challenge,
+che chiede di capire "a quale cliente o contesto e' collegata" la nota -
+da segnalare nel README (Analisi della richiesta / Limiti noti) come
+scelta consapevole.
+
+=== VALIDAZIONE E GESTIONE ERRORI (src/app.ts, src/schemas/notes.schema.ts) ===
+
+- Validazione input con Zod su body, query string e :id
+- Errori di validazione -> HTTP 400, formato { error: "ValidationError", message, details }
+- Nota non trovata      -> HTTP 404, formato { error: "NotFound", message }
+- Errore generico       -> HTTP 500, formato { error: "InternalServerError", message }
+
+=== TEST (test/notes.test.ts, vitest.config.ts) ===
+
+- 23 test, tutti passano (npm test)
+- funzionali: creazione valida, priority di default quando omessa, input non
+  validi (title mancante, type non ammesso), lista, filtri (type+priority),
+  ricerca testuale (q), dettaglio (esistente + 404), modifica (esistente +
+  404), eliminazione (esistente + 404), messaggio di servizio su database
+  vuoto (presente/assente a seconda che sia il db vuoto o solo i filtri)
+- robustezza/sicurezza input (NON access control - il servizio resta senza
+  autenticazione, vedi Limiti noti): title/content oltre il limite di
+  lunghezza -> 400; SQL injection nel testo trattata come stringa letterale
+  (query parametrizzate Prisma, nessuna esecuzione); payload XSS-like
+  salvato/restituito invariato senza interpretazione lato server; id/createdAt
+  inviati dal client nel body ignorati (mass assignment); :id non numerico o
+  negativo nel path -> 400 invece di 500; body non-oggetto -> 400
+- usano app.inject() di Fastify (nessun server reale in ascolto durante i
+  test) contro lo stesso database di sviluppo (prisma/dev.db), pulito con
+  prisma.note.deleteMany() in beforeEach
+
+=== VERIFICA END-TO-END ===
+
+- npx tsc --noEmit: nessun errore
+- npm run build: compila senza errori
+- server avviato con tsx e testato con curl reali su tutti e 5 gli endpoint,
+  inclusi i casi di errore (validazione 400, nota inesistente 404)
+
+=== NON ANCORA FATTO ===
+
+- .env / .env.example: FATTO
+- .gitignore: FATTO
+- Bonus opzionali della challenge (paginazione, ordinamento, seed, statistiche,
+  soft delete, audit log, Dockerfile, OpenAPI, auth, frontend) - non richiesti
+  per il core, vedi README (Miglioramenti futuri)
+
+README completo: fatto (vedi README.md nella root).
