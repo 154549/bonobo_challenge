@@ -959,3 +959,64 @@ prepara il gitignore e aggiorna l'ai log
 L'utente è tornato sulla decisione del turno 63 e ha richiesto di ricreare il `.gitignore`. Ricreato con lo stesso contenuto di quello originale: node_modules/, dist/, generated/, prisma/dev.db, prisma/test.db, .env, *.log.
 
 ---
+
+## Turno 67
+
+### Utente
+
+togli il commit
+
+### Claude
+
+Verificato lo stato reale con `git status`/`git log`: risultava che l'utente aveva già eseguito `git init` e `git add` autonomamente (fuori da questa sessione) — 24 file in staging, nessun commit ancora fatto. Interpretato "togli il commit" come "togli dallo staging", dato che non esisteva alcun commit da annullare. Eseguito `git reset` (operazione sicura e reversibile: sposta i file da staged a untracked, non li cancella dal disco). Confermato con `git status` che tutti i file erano tornati untracked.
+
+---
+
+## Turno 68
+
+### Utente
+
+Commit the working tree changes with a sensible message.
+[richiesta interrotta dall'utente]
+
+### Claude
+
+(Nessuna risposta: il messaggio è stato interrotto/annullato dall'utente prima che iniziassi ad agire.)
+
+---
+
+## Turno 69
+
+### Utente
+
+3 moderate severity vulnerabilities a cosa si riferisce?
+
+### Claude
+
+Rilanciato `npm audit` per avere il dettaglio aggiornato invece di rispondere a memoria. Spiegata la catena di dipendenze: prisma → @prisma/dev → @hono/node-server (qui la vulnerabilità reale, un bypass di middleware in serveStatic tramite slash ripetuti, GHSA-92pp-h63x-v22m). Chiarito che @hono/node-server alimenta il comando opzionale `prisma dev` (server di sviluppo locale per database come Postgres/MySQL), mai usato in questo progetto (qui si usa `prisma migrate` + `@prisma/adapter-better-sqlite3`) — quindi il pacchetto è installato ma il suo codice non viene mai eseguito a runtime. Ribadito perché non è stato applicato `npm audit fix --force` (forzerebbe un downgrade di Prisma a 6.19.3, breaking change non necessario). Solo spiegazione, nessuna modifica al codice.
+
+---
+
+## Turno 70
+
+### Utente
+
+specificalo nel readme alla fine
+
+### Claude
+
+Aggiunta una sezione "#### Nota su `npm audit`" in fondo al README (dopo le Assunzioni personali finali), con la stessa spiegazione data nel turno precedente: catena di dipendenze, perché non riguarda il codice eseguito dal progetto, perché non è stato applicato `npm audit fix --force`.
+
+---
+
+## Turno 71
+
+### Utente
+
+aggiorna l'ai log
+
+### Claude
+
+Aggiunti i turni 67-70 mancanti (togli il commit / git reset, richiesta di commit interrotta dall'utente, spiegazione delle vulnerabilità npm audit, nota aggiunta al README) e questo turno stesso come turno 71.
+
+---
